@@ -87,7 +87,22 @@ namespace Kudu.Core.Infrastructure
                         select new Guid(guid.Trim('{', '}'));
             return guids;
         }
+        public static bool IsNetCoreFrameWork(string projectPath)
+        {
+            var document = XDocument.Parse(File.ReadAllText(projectPath));
+            var root = document.Root;
+            if (root == null)
+            {
+                return false;
+            }
 
+            var targetFrameworks = from propertyGroup in root.Elements(GetName("PropertyGroup"))
+                              let targetFramework = propertyGroup.Element(GetName("TargetFramework"))
+                              where targetFramework != null && String.Equals(targetFramework.Value, "netcoreapp1.0", StringComparison.OrdinalIgnoreCase)
+                              select targetFramework.Value;
+
+            return targetFrameworks.Any();
+        }
         public static bool IsExecutableProject(string projectPath)
         {
             var document = XDocument.Parse(File.ReadAllText(projectPath));

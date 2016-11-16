@@ -153,21 +153,25 @@ namespace Kudu.Core.Infrastructure
 
             if (projectType == SolutionProjectType.KnownToBeMSBuildFormat && File.Exists(_absolutePath))
             {
-                // If the project is an msbuild project then extra the project type guids
+                // If the project is a msbuild project then extract the project type guids
                 _projectTypeGuids = VsHelper.GetProjectTypeGuids(_absolutePath);
 
                 // Check if it's a wap
                 _isWap = VsHelper.IsWap(_projectTypeGuids);
+
+                // csproj falls in this category, we check for:<TargetFramework>netcoreapp1.0</TargetFramework>
+                // KnownToBeMSBuildFormat: C#, VB, and VJ# projects.
+                _isAspNetCore = projectExtension.Equals(".csproj", StringComparison.OrdinalIgnoreCase) && VsHelper.IsNetCoreFrameWork(_absolutePath) && AspNetCoreHelper.IsWebApplicationProjectFile(_absolutePath);
 
                 _isExecutable = VsHelper.IsExecutableProject(_absolutePath);
             }
             else if (projectExtension.Equals(".xproj", StringComparison.OrdinalIgnoreCase) && File.Exists(_absolutePath))
             {
                 var projectPath = Path.Combine(Path.GetDirectoryName(_absolutePath), "project.json");
-                if (AspNetCoreHelper.IsWebApplicationProjectJsonFile(projectPath))
+                if (AspNetCoreHelper.IsWebApplicationProjectFile(projectPath))
                 {
                     _isAspNetCore = true;
-                    _absolutePath = projectPath;
+                    // _absolutePath = projectPath; _absolutePath is now xproj
                 }
                 _projectTypeGuids = Enumerable.Empty<Guid>();
             }

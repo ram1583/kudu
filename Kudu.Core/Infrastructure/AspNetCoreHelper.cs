@@ -12,9 +12,9 @@ namespace Kudu.Core.Infrastructure
         private const string ProjectJson = "project.json";
         public static readonly string[] ProjectJsonLookupList = new string[] { $"*{ProjectJson}" };
 
-        public static bool IsWebApplicationProjectJsonFile(string projectJsonPath)
+        public static bool IsWebApplicationProjectFile(string projectFilePath)
         {
-            var projectDirectory = Path.GetDirectoryName(projectJsonPath);
+            var projectDirectory = Path.GetDirectoryName(projectFilePath);
             var webConfig = Path.Combine(projectDirectory, "web.config");
             var wwwrootDirectory = Path.Combine(projectDirectory, "wwwroot");
 
@@ -27,7 +27,7 @@ namespace Kudu.Core.Infrastructure
             projectJsonPath = null;
             var projectJsonFiles = fileFinder.ListFiles(rootPath, SearchOption.AllDirectories, ProjectJsonLookupList)
                 .Where(path => Path.GetFileName(path).Equals(ProjectJson, StringComparison.OrdinalIgnoreCase))
-                .Where(IsWebApplicationProjectJsonFile)
+                .Where(IsWebApplicationProjectFile)
                 .ToList();
 
             if (projectJsonFiles.Any())
