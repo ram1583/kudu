@@ -264,7 +264,8 @@ namespace Kudu.Core.Deployment.Generator
             {
                 var solution = VsHelper.FindContainingSolution(repositoryRoot, targetPath, fileFinder);
                 string solutionPath = solution != null ? solution.Path : null;
-                if (VsHelper.IsWap(targetPath))
+                var projectTypeGuids = VsHelper.GetProjectTypeGuids(targetPath);
+                if (VsHelper.IsWap(projectTypeGuids))
                 {
                     return new WapBuilder(_environment,
                                           perDeploymentSettings,
@@ -273,7 +274,7 @@ namespace Kudu.Core.Deployment.Generator
                                           targetPath,
                                           solutionPath);
                 }
-                else if (targetPath.EndsWith(".csproj",StringComparison.OrdinalIgnoreCase) && VsHelper.IsNetCoreFrameWork(targetPath) && AspNetCoreHelper.IsWebApplicationProjectFile(targetPath))
+                else if (VsHelper.IsNetCoreFrameWork(targetPath, projectTypeGuids))
                 {
                     // with the new dotnet preview3, even it isn't created with VS, a .csproj will be presented
                     return new AspNetCoreBuilder(_environment,

@@ -161,7 +161,7 @@ namespace Kudu.Core.Infrastructure
 
                 // csproj falls in this category, we check for:<TargetFramework>netcoreapp1.0</TargetFramework>
                 // KnownToBeMSBuildFormat: C#, VB, and VJ# projects.
-                _isAspNetCore = projectExtension.Equals(".csproj", StringComparison.OrdinalIgnoreCase) && VsHelper.IsNetCoreFrameWork(_absolutePath) && AspNetCoreHelper.IsWebApplicationProjectFile(_absolutePath);
+                _isAspNetCore = VsHelper.IsNetCoreFrameWork(_absolutePath, _projectTypeGuids);
 
                 _isExecutable = VsHelper.IsExecutableProject(_absolutePath);
             }

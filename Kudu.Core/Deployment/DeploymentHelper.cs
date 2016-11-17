@@ -28,7 +28,7 @@ namespace Kudu.Core.Deployment
         public static bool IsDeployableProject(string path)
         {
             return IsProject(path) &&
-                   (VsHelper.IsWap(path) || VsHelper.IsExecutableProject(path));
+                   (VsHelper.IsWap(VsHelper.GetProjectTypeGuids(path)) || VsHelper.IsExecutableProject(path));
         }
 
         public static bool IsDefaultWebRootContent(string webroot)

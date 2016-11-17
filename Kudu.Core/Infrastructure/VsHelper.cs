@@ -65,12 +65,7 @@ namespace Kudu.Core.Infrastructure
 
             return solutions[0];
         }
-
-        public static bool IsWap(string projectPath)
-        {
-            return IsWap(GetProjectTypeGuids(projectPath));
-        }
-
+ 
         public static bool IsWap(IEnumerable<Guid> projectTypeGuids)
         {
             return projectTypeGuids.Contains(_wapGuid);
@@ -87,21 +82,10 @@ namespace Kudu.Core.Infrastructure
                         select new Guid(guid.Trim('{', '}'));
             return guids;
         }
-        public static bool IsNetCoreFrameWork(string projectPath)
+        public static bool IsNetCoreFrameWork(string projectPath, IEnumerable<Guid> projectTypeGuids)
         {
-            var document = XDocument.Parse(File.ReadAllText(projectPath));
-            var root = document.Root;
-            if (root == null)
-            {
-                return false;
-            }
-
-            var targetFrameworks = from propertyGroup in root.Elements(GetName("PropertyGroup"))
-                              let targetFramework = propertyGroup.Element(GetName("TargetFramework"))
-                              where targetFramework != null && String.Equals(targetFramework.Value, "netcoreapp1.0", StringComparison.OrdinalIgnoreCase)
-                              select targetFramework.Value;
-
-            return targetFrameworks.Any();
+            // we need to verify suffix is csproj, xproj will not have projectTypeGuids either
+            return projectPath.EndsWith(".csproj", StringComparison.OrdinalIgnoreCase) && !projectTypeGuids.Any() && AspNetCoreHelper.IsWebApplicationProjectFile(projectPath);
         }
         public static bool IsExecutableProject(string projectPath)
         {
