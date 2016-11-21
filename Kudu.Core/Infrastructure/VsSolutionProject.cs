@@ -159,7 +159,6 @@ namespace Kudu.Core.Infrastructure
                 // Check if it's a wap
                 _isWap = VsHelper.IsWap(_projectTypeGuids);
 
-                // csproj falls in this category, we check for:<TargetFramework>netcoreapp1.0</TargetFramework>
                 // KnownToBeMSBuildFormat: C#, VB, and VJ# projects.
                 _isAspNetCore = VsHelper.IsNetCoreFrameWork(_absolutePath, _projectTypeGuids);
 

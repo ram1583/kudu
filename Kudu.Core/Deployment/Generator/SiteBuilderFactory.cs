@@ -202,6 +202,7 @@ namespace Kudu.Core.Deployment.Generator
             }
             else if (projects.Count == 1)
             {
+                // does not apply to "xproj" files
                 return DetermineProject(repositoryRoot, projects[0], perDeploymentSettings, fileFinder);
             }
 
@@ -277,11 +278,13 @@ namespace Kudu.Core.Deployment.Generator
                 else if (VsHelper.IsNetCoreFrameWork(targetPath, projectTypeGuids))
                 {
                     // with the new dotnet preview3, even it isn't created with VS, a .csproj will be presented
+                    // even if we have a solutionfile, it is not gona be needed
                     return new AspNetCoreBuilder(_environment,
                            perDeploymentSettings,
                            _propertyProvider,
                            repositoryRoot,
-                           targetPath);
+                           targetPath,
+                           solutionPath);
                 }
                 else
                 {
