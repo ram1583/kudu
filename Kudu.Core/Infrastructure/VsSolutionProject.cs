@@ -160,7 +160,7 @@ namespace Kudu.Core.Infrastructure
                 _isWap = VsHelper.IsWap(_projectTypeGuids);
 
                 // KnownToBeMSBuildFormat: C#, VB, and VJ# projects.
-                _isAspNetCore = VsHelper.IsNetCoreFrameWork(_absolutePath, _projectTypeGuids);
+                _isAspNetCore = AspNetCoreHelper.IsDotnetCorePreview3(_absolutePath, _projectTypeGuids);
 
                 _isExecutable = VsHelper.IsExecutableProject(_absolutePath);
             }

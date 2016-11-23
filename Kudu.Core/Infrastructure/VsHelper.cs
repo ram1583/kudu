@@ -82,11 +82,6 @@ namespace Kudu.Core.Infrastructure
                         select new Guid(guid.Trim('{', '}'));
             return guids;
         }
-        public static bool IsNetCoreFrameWork(string projectPath, IEnumerable<Guid> projectTypeGuids)
-        {
-            // we need to verify suffix is csproj, xproj will not have projectTypeGuids either
-            return projectPath.EndsWith(".csproj", StringComparison.OrdinalIgnoreCase) && !projectTypeGuids.Any() && AspNetCoreHelper.IsWebApplicationProjectFile(projectPath);
-        }
         public static bool IsExecutableProject(string projectPath)
         {
             var document = XDocument.Parse(File.ReadAllText(projectPath));
